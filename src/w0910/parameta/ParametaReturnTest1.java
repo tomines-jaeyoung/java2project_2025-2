@@ -1,4 +1,6 @@
-package w0910;
+package w0910.parameta;
+
+import w0910.Calc1;
 
 import java.util.Scanner;
 

@@ -1,6 +1,5 @@
 
 package w0910.parameta;
-import w0910.Calc1;
 
 public class ParametaReturnTest2 {
     public static void main(String[] args) {

@@ -1,6 +1,6 @@
 package w0910.Muliti_return;
 
-import w0910.Calc1;
+import w0910.parameta.Calc1;
 
 public class MultiReturnTest {
 

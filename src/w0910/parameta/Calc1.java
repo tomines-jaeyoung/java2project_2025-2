@@ -1,4 +1,4 @@
-package w0910;
+package w0910.parameta;
 import java.util.List;
 
 public class Calc1 {

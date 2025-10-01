@@ -1,4 +1,4 @@
-package w0910;
+package w0910.parameta;
 
 public class Code10_10 {
     static int[] method3(int v1, int v2) {

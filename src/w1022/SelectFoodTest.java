@@ -3,7 +3,6 @@ package w1022;
 import center_Frame.CenterFrame;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 // *주의: java.awt.*와 java.awt.event.*는 이미지에 보이지 않지만,

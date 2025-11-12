@@ -15,6 +15,11 @@ public class BorderLayoutTest extends JFrame {
             add(btns[i], locs[i]);
         }
 
+
+
+
+
+
         setTitle("Flowlayout 연습");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //없으면 종료 버튼 눌러도 프로그램은 종료 안 됨
         CenterFrame cf = new CenterFrame(200, 250);

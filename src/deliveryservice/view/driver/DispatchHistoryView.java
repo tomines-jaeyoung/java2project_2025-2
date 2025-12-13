@@ -18,7 +18,8 @@ public class DispatchHistoryView extends JPanel {
     JButton btnSearch;
     JButton btnHome;
 
-    String[] header = {"주문번호", "출발지", "도착지", "화물정보", "운임", "상태"};
+    // ★ 수정됨: "상차일시" 컬럼 추가
+    String[] header = {"주문번호", "출발지", "도착지", "화물정보", "운임", "상차일시", "상태"};
     String[] comboStr = {"주문번호", "출발지", "도착지"};
 
     public DispatchHistoryView() {
@@ -51,9 +52,10 @@ public class DispatchHistoryView extends JPanel {
         table = new JTable(model);
         table.setRowHeight(25);
 
-        // 컬럼 너비 살짝 조정
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(3).setPreferredWidth(150);
+        // 컬럼 너비 조정 (날짜가 잘 보이도록 조정)
+        table.getColumnModel().getColumn(0).setPreferredWidth(100); // 주문번호
+        table.getColumnModel().getColumn(3).setPreferredWidth(150); // 화물정보
+        table.getColumnModel().getColumn(5).setPreferredWidth(130); // ★ 상차일시 너비 확보
 
         JScrollPane scroll = new JScrollPane(table);
         updateTable();
@@ -64,9 +66,15 @@ public class DispatchHistoryView extends JPanel {
         model.setRowCount(0);
         if (historyList != null) {
             for(OrderVO vo : historyList) {
+                // ★ 수정됨: vo.getPickupTime() 추가
                 model.addRow(new Object[] {
-                        vo.getOrderId(), vo.getOrigin(), vo.getDest(),
-                        vo.getCargoInfo(), vo.getPrice(), vo.getStatus()
+                        vo.getOrderId(),
+                        vo.getOrigin(),
+                        vo.getDest(),
+                        vo.getCargoInfo(),
+                        vo.getPrice(),
+                        vo.getPickupTime(), // 여기가 추가된 부분입니다.
+                        vo.getStatus()
                 });
             }
         }

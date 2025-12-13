@@ -3,15 +3,20 @@ package deliveryservice.view.order;
 import deliveryservice.domain.OrderVO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class OrderInsertView extends JPanel {
     JTextField tfOrigin, tfDest, tfCargoName, tfLoad, tfDate, tfCost;
+
+    // ★ 수정됨: 콤보박스 대신 JSpinner 사용 (시간:분 조절용)
+    JSpinner timeSpinner;
+
     JLabel lblUserId;
     JButton btnSubmit, btnHome;
-    JButton btnDate; // ★ 날짜 선택 버튼 추가
+    JButton btnDate;
 
     public OrderInsertView() {
         setLayout(new BorderLayout());
@@ -60,20 +65,33 @@ public class OrderInsertView extends JPanel {
         tfLoad = new JTextField(20);
         c.gridx = 1; c.gridy = 4; formPanel.add(tfLoad, c);
 
-        // 5. 배송 일시 (★ 수정됨: 텍스트필드 + 버튼)
+        // 5. 배송 일시 (★ 수정됨: 날짜 + 분 단위 시간 조절)
         addLabel(formPanel, "배송 희망일시:", 0, 5, c);
 
-        JPanel pDate = new JPanel(new BorderLayout(5, 0)); // 내부 패널
-        pDate.setBackground(new Color(245, 245, 245)); // 배경색 일치
+        JPanel pDate = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        pDate.setBackground(new Color(245, 245, 245));
 
-        tfDate = new JTextField();
-        tfDate.setEditable(false); // 직접 입력 금지 (달력으로만 선택)
-
-        btnDate = new JButton("📅"); // 달력 아이콘 버튼
+        tfDate = new JTextField(10);
+        tfDate.setEditable(false);
+        btnDate = new JButton("📅");
         btnDate.setPreferredSize(new Dimension(50, 25));
 
-        pDate.add(tfDate, BorderLayout.CENTER);
-        pDate.add(btnDate, BorderLayout.EAST);
+        // ★ JSpinner 설정 (시간:분, 1분 단위)
+        // 현재 시간, 최소/최대 제한 없음, 1분 단위 증감
+        SpinnerDateModel model = new SpinnerDateModel(new Date(), null, null, Calendar.MINUTE);
+        timeSpinner = new JSpinner(model);
+
+        // 포맷을 "HH:mm" (예: 14:30)으로 설정
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
+        timeSpinner.setEditor(editor);
+
+        // 스피너 크기 조정
+        timeSpinner.setPreferredSize(new Dimension(80, 25));
+
+        pDate.add(tfDate);
+        pDate.add(btnDate);
+        pDate.add(new JLabel(" 시간: "));
+        pDate.add(timeSpinner); // 콤보박스 대신 스피너 추가
 
         c.gridx = 1; c.gridy = 5;
         formPanel.add(pDate, c);
@@ -90,7 +108,7 @@ public class OrderInsertView extends JPanel {
         btnPanel.setBackground(Color.WHITE);
         btnSubmit = new JButton("주문 등록하기");
         btnSubmit.setPreferredSize(new Dimension(150, 45));
-        btnSubmit.setBackground(new Color(34, 139, 34));
+        btnSubmit.setBackground(new Color(34, 139, 34)); // Forest Green
         btnSubmit.setForeground(Color.WHITE);
 
         btnHome = new JButton("취소 / 홈으로");
@@ -110,11 +128,11 @@ public class OrderInsertView extends JPanel {
     }
 
     public void setUserId(String id) { lblUserId.setText(id); }
-    public void setDate(String date) { tfDate.setText(date); } // 날짜 세팅용
+    public void setDate(String date) { tfDate.setText(date); }
 
     public JButton getBtnSubmit() { return btnSubmit; }
     public JButton getBtnHome() { return btnHome; }
-    public JButton getBtnDate() { return btnDate; } // 달력 버튼 getter
+    public JButton getBtnDate() { return btnDate; }
 
     public OrderVO getOrderData() {
         OrderVO vo = new OrderVO();
@@ -122,7 +140,16 @@ public class OrderInsertView extends JPanel {
         vo.setOrigin(tfOrigin.getText());
         vo.setDest(tfDest.getText());
         vo.setCargoInfo(tfCargoName.getText() + " (" + tfLoad.getText() + "kg)");
-        // 날짜가 비어있으면 오늘 날짜로 대체하는 등 처리 가능
+
+        // ★ 중요: 스피너에서 시간 값을 가져와서 "HH:mm" 문자열로 변환
+        Date timeVal = (Date) timeSpinner.getValue();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String timeStr = sdf.format(timeVal);
+
+        // 날짜 + 시간 문자열 합치기 (예: 2025-12-14 14:05)
+        String fullDate = tfDate.getText() + " " + timeStr;
+        vo.setPickupTime(fullDate);
+
         try { vo.setPrice(Integer.parseInt(tfCost.getText())); }
         catch(Exception e) { vo.setPrice(0); }
         return vo;
@@ -131,5 +158,7 @@ public class OrderInsertView extends JPanel {
     public void clear() {
         tfOrigin.setText(""); tfDest.setText(""); tfCargoName.setText("");
         tfLoad.setText(""); tfDate.setText(""); tfCost.setText("");
+        // 시간 스피너를 현재 시간으로 초기화
+        timeSpinner.setValue(new Date());
     }
 }

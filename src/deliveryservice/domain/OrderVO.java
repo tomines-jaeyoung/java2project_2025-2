@@ -1,16 +1,17 @@
 package deliveryservice.domain;
 
-import java.sql.Date;
-
 public class OrderVO {
-    private String orderId;     // 주문번호 (PK)
-    private String userId;      // 고객ID (FK)
-    private String origin;      // 출발지
-    private String dest;        // 도착지
-    private String cargoInfo;   // 화물정보
-    private int price;          // 운임
-    private Date pickupTime;    // 희망상차시간
-    private String status;      // 상태 (대기/배차/완료)
+    private String orderId;
+    private String userId;
+    private String origin;
+    private String dest;
+    private String cargoInfo;
+    private int price;
+
+    // ★ 수정됨: 날짜+시간을 완벽하게 표현하기 위해 String으로 변경
+    private String pickupTime;
+
+    private String status;
 
     // Getter & Setter
     public String getOrderId() { return orderId; }
@@ -31,8 +32,9 @@ public class OrderVO {
     public int getPrice() { return price; }
     public void setPrice(int price) { this.price = price; }
 
-    public Date getPickupTime() { return pickupTime; }
-    public void setPickupTime(Date pickupTime) { this.pickupTime = pickupTime; }
+    // ★ 날짜 타입 변경 (Date -> String)
+    public String getPickupTime() { return pickupTime; }
+    public void setPickupTime(String pickupTime) { this.pickupTime = pickupTime; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
